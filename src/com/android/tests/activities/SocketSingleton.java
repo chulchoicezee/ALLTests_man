@@ -1,4 +1,4 @@
-package com.android.tests.activities;
+/*package com.android.tests.activities;
 
 import io.socket.IOAcknowledge;
 import io.socket.IOCallback;
@@ -96,3 +96,4 @@ public class SocketSingleton {
     }
     
 }
+*/

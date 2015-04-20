@@ -1,13 +1,9 @@
 package com.android.tests.activities;
 
 
-import io.socket.IOAcknowledge;
-import io.socket.IOCallback;
-import io.socket.SocketIO;
-import io.socket.SocketIOException;
-
 import java.net.MalformedURLException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +11,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,10 +20,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.tests.R;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.socketio.Acknowledge;
+import com.koushikdutta.async.http.socketio.ConnectCallback;
+import com.koushikdutta.async.http.socketio.EventCallback;
+import com.koushikdutta.async.http.socketio.JSONCallback;
+import com.koushikdutta.async.http.socketio.SocketIOClient;
+import com.koushikdutta.async.http.socketio.SocketIOException;
+import com.koushikdutta.async.http.socketio.StringCallback;
 
 public class O_SocketIOTestActivity extends Activity{
 
-	private static final String TAG = "N_AABFragTestActivity";
+	private static final String TAG = "O_SocketIOTestActivity";
 	TextView tv = null;
 	Button btn = null;
 	
@@ -53,7 +56,7 @@ public class O_SocketIOTestActivity extends Activity{
 					@Override
 					protected Void doInBackground(Void... params) {
 						// TODO Auto-generated method stub
-						SocketIO socket = null;
+						/*SocketIO socket = null;
 						try {
 							socket = new SocketIO("http://chulchoice.cafe24app.com:80");
 						} catch (MalformedURLException e1) {
@@ -98,8 +101,46 @@ public class O_SocketIOTestActivity extends Activity{
 				        });
 
 				        // This line is cached until the connection is establisched.
-				        socket.send("Hello Server!");
+				        socket.send("Hello Server!");*/
 				        
+						
+						SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), "http://chulchoice.cafe24app.com:80", new ConnectCallback() {
+						    @Override
+						    public void onConnectCompleted(Exception ex, SocketIOClient client) {
+						        if (ex != null) {
+						            ex.printStackTrace();
+						            return;
+						        }
+						        client.setStringCallback(new StringCallback() {
+					
+									@Override
+									public void onString(String arg0,
+											Acknowledge arg1) {
+										// TODO Auto-generated method stub
+										System.out.println(arg0);
+									}
+						        });
+						        client.on("someEvent", new EventCallback() {
+						            
+									@Override
+									public void onEvent(JSONArray arg0,
+											Acknowledge arg1) {
+										// TODO Auto-generated method stub
+										System.out.println("args: " + arg0.toString());
+									}
+						        });
+						        client.setJSONCallback(new JSONCallback() {
+						            
+						        	@Override
+									public void onJSON(JSONObject arg0,
+											Acknowledge arg1) {
+										// TODO Auto-generated method stub
+										System.out.println("json: " + arg0.toString());
+									}
+						        });
+						    }
+						});
+						
 						return null;
 					}
 				}.execute();
