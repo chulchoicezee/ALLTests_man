@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="langTest1">언어 테스트1</string>
+    <string name="langTest2">언어 테스트2</string>
+</resources>
